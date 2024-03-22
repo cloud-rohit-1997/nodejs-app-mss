@@ -1,0 +1,30 @@
+node{
+    stage ('Checkout code') {
+        git credentialsId: '056cb69a-1bca-40bf-bf09-ca5137a9c022', url: 'https://github.com/cloud-rohit-1997/nodejs-app-mss.git'
+    }
+
+    stage ('Build the packages/artifacts'){
+        nodejs(nodeJSInstallationName: 'nodejs 21.7.1'){
+            sh "npm install"
+        }
+        }
+    stage ('SonarQube Report'){
+         nodejs(nodeJSInstallationName: 'nodejs 21.7.1'){
+            sh "npm run sonar"
+        }
+    }
+
+    stage ('Uploading the artifacts into Nexus'){
+       nodejs(nodeJSInstallationName: 'nodejs 21.7.1'){
+            sh "npm publish"
+        }
+    }
+   
+   stage ('Run Nodejs Project'){
+     nodejs(nodeJSInstallationName: 'nodejs 21.7.1'){
+            sh "node app.js"
+        }
+   }
+
+
+}
